@@ -1,6 +1,6 @@
 #Finding positive prime numbers in a range
 import sys
-num = int(sys.argv[1])
+num = int(sys.argv[0])
 
 #Funtion to fetch prime numbers
 def fetchprimenumbers():
