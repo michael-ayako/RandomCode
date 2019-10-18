@@ -1,0 +1,1 @@
+This repos stores random code on various coding problems that can be used for mathemetical to logical problems. 
