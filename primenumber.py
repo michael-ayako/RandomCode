@@ -1,6 +1,7 @@
 #Finding positive prime numbers in a range
 import sys
-num = int(sys.argv[0])
+num = int(sys.argv[1])
+
 
 #Funtion to fetch prime numbers
 def fetchprimenumbers():
@@ -25,7 +26,7 @@ def fetchprimenumbers():
 	print("This range has "+str(v))
 
 
-if(num<=2):
+if(int(num)<=2):
 	print("This value cannot be equivalent to 2 or lower\n")
 	exit()
 else: 
