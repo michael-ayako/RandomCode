@@ -9,7 +9,7 @@ import os
 np.random.seed(42)
 
 # To plot pretty figures
-
+#%matplotlib inline
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 mpl.rc('axes', labelsize=14)
@@ -18,7 +18,7 @@ mpl.rc('ytick', labelsize=12)
 
 # Where to save the figures
 PROJECT_ROOT_DIR = "."
-CHAPTER_ID = "fundamentals"
+CHAPTER_ID = "classification"
 
 def save_fig(fig_id, tight_layout=True):
     path = os.path.join(PROJECT_ROOT_DIR, "images", CHAPTER_ID, fig_id + ".png")
@@ -27,54 +27,23 @@ def save_fig(fig_id, tight_layout=True):
         plt.tight_layout()
     plt.savefig(path, format='png', dpi=300)
 
-# Ignore useless warnings (see SciPy issue #5998)
-import warnings
-warnings.filterwarnings(action="ignore", message="^internal gelsd")
 
-'''
-def prepare_country_stats(oecd_bli, gdp_per_capita):
-    oecd_bli = oecd_bli[oecd_bli["INEQUALITY"]=="TOT"]
-    oecd_bli = oecd_bli.pivot(index="Country", columns="Indicator", values="Value")
-    gdp_per_capita.rename(columns={"2015": "GDP per capita"}, inplace=True)
-    gdp_per_capita.set_index("Country", inplace=True)
-    full_country_stats = pd.merge(left=oecd_bli, right=gdp_per_capita,
-                                  left_index=True, right_index=True)
-    full_country_stats.sort_values(by="GDP per capita", inplace=True)
-    remove_indices = [0, 1, 6, 8, 33, 34, 35]
-    keep_indices = list(set(range(36)) - set(remove_indices))
-    return full_country_stats[["GDP per capita", 'Life satisfaction']].iloc[keep_indices]
+def sort_by_target(mnist):
+    reorder_train = np.array(sorted([(target, i) for i, target in enumerate(mnist.target[:60000])]))[:, 1]
+    reorder_test = np.array(sorted([(target, i) for i, target in enumerate(mnist.target[60000:])]))[:, 1]
+    mnist.data[:60000] = mnist.data[reorder_train]
+    mnist.target[:60000] = mnist.target[reorder_train]
+    mnist.data[60000:] = mnist.data[reorder_test + 60000]
+    mnist.target[60000:] = mnist.target[reorder_test + 60000]
 
-import os
-datapath = os.path.join("datasets", "lifesat", "")
+try:
+    from sklearn.datasets import fetch_openml
+    mnist = fetch_openml('mnist_784', version=1, cache=True)
+    mnist.target = mnist.target.astype(np.int8) # fetch_openml() returns targets as strings
+    sort_by_target(mnist) # fetch_openml() returns an unsorted dataset
+except ImportError:
+    from sklearn.datasets import fetch_mldata
+    mnist = fetch_mldata('MNIST original')
+#print(str(mnist["data"], mnist["target"]))
 
-# Code example
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import sklearn.linear_model
-
-# Load the data
-oecd_bli = pd.read_csv(datapath + "oecd_bli_2015.csv", thousands=',')
-gdp_per_capita = pd.read_csv(datapath + "gdp_per_capita.csv",thousands=',',delimiter='\t',
-                             encoding='latin1', na_values="n/a")
-
-# Prepare the data
-country_stats = prepare_country_stats(oecd_bli, gdp_per_capita)
-X = np.c_[country_stats["GDP per capita"]]
-y = np.c_[country_stats["Life satisfaction"]]
-
-# Visualize the data
-country_stats.plot(kind='scatter', x="GDP per capita", y='Life satisfaction')
-plt.show()
-
-# Select a linear model
-model = sklearn.linear_model.LinearRegression()
-
-# Train the model
-model.fit(X, y)
-
-# Make a prediction for Cyprus
-X_new = [[22587]]  # Cyprus' GDP per capita
-print(model.predict(X_new)) # outputs [[ 5.96242338]]
-
-'''
+#print(str(mnist.data.shape))
