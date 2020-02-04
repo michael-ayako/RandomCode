@@ -1,21 +1,22 @@
 #General imports
-import logging 
+import logger
 import sys
 import os
 
-logging.info("Configuring logger...")
-try:
-    #Create and configure logger 
-    logging.basicConfig(filename="./chatterbot/logs%s.log"%((__file__).split(".")[0]), format='%(asctime)s %(message)s', filemode='w')   
-    #Creating an object 
-    logger=logging.getLogger() 
-    #Setting the threshold of logger to DEBUG 
-    logger.setLevel(logging.DEBUG)
-    logging.info("Logger configured...")
-except Exception as err:
-    logging.info("Logging not configured: "+err)  
+class chatterbot:
+    def main():
+        mainlog = logger("General imports.....")
+        
+    if __name__== "__main__":
+        main()
 
 
+
+
+#logging.info("Configuring logger...")
+
+
+"""
 logging.info("General imports.....")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -109,3 +110,4 @@ except Exception as err:
     print(msg)
     logger.error(err)
 
+"""
