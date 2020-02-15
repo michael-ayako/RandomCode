@@ -11,7 +11,7 @@ from nltk.stem import WordNetLemmatizer as lemmatizer
 from nltk.corpus import stopwords 
 import string
 
-logging.basicConfig(filename="outputfiles_debug/newfile.log", format='%(asctime)s %(message)s', filemode='w')  #Create and configure logger 
+logging.basicConfig(filename="outputfiles_debug/log_data.log", format='%(asctime)s %(message)s', filemode='w')  #Create and configure logger 
 logging.info("Configuring logger...")
 logger=logging.getLogger() #Creating an object 
 logger.setLevel(logging.DEBUG) #Setting the threshold of logger to DEBUG 
@@ -34,25 +34,12 @@ class data_cleaning:
             fetchfile = open(str(self.MAIN_DIR+"/"+x))
             for x in fetchfile:
                 self.STORAGE.append(x.lower())
-        F = open(str(self.OUT_DIR+"/STORAGE.ayx"),"w+")
-        for x in self.STORAGE:
-            F.write(x)
-        F.close()
-
-        
-
+    
     def cleaning_data(self):#Removing unnecessary data
         for x in tqdm(self.STORAGE):
             if(re.search("- -",x) or re.search("  -",x)  ):
                 self.EDITED_STORAGE.append(x)
-        F = open(str(self.OUT_DIR+"/EDITED_STORAGE.ayx"),"w+")
-        for x in self.EDITED_STORAGE:
-            F.write(x)
-        F.close()
         
-
-
-
     def dump_creation(self):#Creating a dump file to match questions to responses
         q = ''
         for v in tqdm(self.EDITED_STORAGE):
@@ -61,15 +48,6 @@ class data_cleaning:
             if re.search("  -",v):
                 self.JSON_DUMP_Q.append(re.sub("- -","",q))
                 self.JSON_DUMP_A.append(re.sub("  -","",v))  
-        F = open(str(self.OUT_DIR+"/JSON_DUMP_Q.ayx"),"w+")
-        for x in self.JSON_DUMP_Q:
-            F.write(x)
-        F.close()
-        F = open(str(self.OUT_DIR+"/JSON_DUMP_A.ayx"),"w+")
-        for x in self.JSON_DUMP_A:
-            F.write(x)
-        F.close()  
-
 
     #Tokenizing the words using NLTK
     def tokenization(self): 
@@ -77,16 +55,6 @@ class data_cleaning:
             self.X_token.append(tokenize(x))
         for x in self.JSON_DUMP_A:
             self.y_token.append(tokenize(x))
-        
-        F = open(str(self.OUT_DIR+"/X_token.ayx"),"w+")
-        for x in self.X_token:
-            F.write(str(x))
-        F.close()
-        F = open(str(self.OUT_DIR+"/y_token.ayx"),"w+")
-        for x in self.y_token:
-            F.write(str(x))
-        F.close()  
-
 
     def lematization(self):#Lematizing the words
         lemm = lemmatizer()
@@ -102,15 +70,6 @@ class data_cleaning:
                 lema = lemm.lemmatize(y)
                 y_lemma_temp.append(lema)
             self.y_lemma.append(y_lemma_temp)
-        
-        F = open(str(self.OUT_DIR+"/X_lemma.ayx"),"w+")
-        for x in self.X_lemma:
-            F.write(str(x))
-        F.close()
-        F = open(str(self.OUT_DIR+"/y_lemma.ayx"),"w+")
-        for x in self.y_lemma:
-            F.write(str(x))
-        F.close() 
 
     def rm_stopwords(self):
         stop_words = set(stopwords.words('english'))
@@ -127,14 +86,6 @@ class data_cleaning:
                     y_stop_temp.append(y)
             self.y_stop.append(y_stop_temp)
 
-        F = open(str(self.OUT_DIR+"/X_stop.ayx"),"w+")
-        for x in self.X_stop:
-            F.write(str(x))
-        F.close()
-        F = open(str(self.OUT_DIR+"/y_stop.ayx"),"w+")
-        for x in self.y_stop:
-            F.write(str(x))
-        F.close() 
     def run_func(self):
         try:
             self.fetching_files()
