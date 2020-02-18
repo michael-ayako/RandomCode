@@ -10,6 +10,9 @@ from nltk import word_tokenize as tokenize
 from nltk.stem import WordNetLemmatizer as lemmatizer
 from nltk.corpus import stopwords 
 import string
+from keras.preprocessing.text import one_hot
+from keras.preprocessing.text import Tokenizer
+
 
 logging.basicConfig(filename="outputfiles_debug/log_data.log", format='%(asctime)s %(message)s', filemode='w')  #Create and configure logger 
 logging.info("Configuring logger...")
@@ -26,7 +29,7 @@ class data_cleaning:
         self.X_token , self.y_token = [] , []
         self.X_lemma , self.y_lemma= [] , []
         self.X_stop , self.y_stop= [] , []
-    
+        self.X_bag , self.y_bag= [] , []
 
     def fetching_files(self):#Fetching data from files and storing it in a variable LOLS!
         files = list(os.listdir(self.MAIN_DIR))
@@ -86,6 +89,14 @@ class data_cleaning:
                     y_stop_temp.append(y)
             self.y_stop.append(y_stop_temp)
 
+    def bagofwords(self):
+        X = Tokenizer()
+        X.fit_on_texts(self.X_stop)
+        self.X_bag = X.texts_to_matrix(self.X_stop, mode='count')
+        y = Tokenizer()
+        y.fit_on_texts(self.y_stop)
+        self.y_bag = y.texts_to_matrix(self.y_stop, mode='count')
+
     def run_func(self):
         try:
             self.fetching_files()
@@ -94,7 +105,8 @@ class data_cleaning:
             self.tokenization()
             self.lematization()
             self.rm_stopwords()
-            return (self.X_stop,self.y_stop)
+            self.bagofwords()
+            return (self.X_bag,self.y_bag)
         except Exception as err:
             msg = str('Error: %s'%(err))
             print(msg)

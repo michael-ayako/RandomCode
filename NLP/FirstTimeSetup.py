@@ -1,6 +1,6 @@
 import pickle
 from data_cleaning import data_cleaning
-from machine_training import machine_learning
+from training import machine_learning
 from picklechecker import picklechecker
 
 
@@ -22,22 +22,17 @@ class main:
           
 
     def chatbot_module(self):
-        ml = machine_learning(self.X_cleaned,self.X_cleaned)
-        ml.OneHotEncoder()
+        machine_learning(self.X_cleaned,self.X_cleaned)
 
 
 def __main__():
     startExec = main()
+    startExec.cleanup_module()
     checkpickles = ['X_cleaned','y_cleaned']
     for x in checkpickles :
         pc = picklechecker(x,"")
         if(pc.check_pickle() == False):
             startExec.cleanup_module()
-
-
-        
-     
-    
 
 if __name__ == "__main__":
     __main__()
