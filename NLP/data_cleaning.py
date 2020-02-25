@@ -97,7 +97,7 @@ class data_cleaning:
         y.fit_on_texts(self.y_stop)
         self.y_bag = y.texts_to_matrix(self.y_stop, mode='count')
 
-    def run_func(self):
+    def __main__(self):
         try:
             self.fetching_files()
             self.cleaning_data()
