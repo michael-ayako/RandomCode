@@ -3,3 +3,5 @@ py -3.7-32 -m pip install --upgrade pip
 
 #listing packages installed
 py -3.7-32 -m pip list
+
+Set-ExecutionPolicy RemoteSigned
