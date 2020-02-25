@@ -9,10 +9,13 @@ outputs = layers.Dense(10, name='predictions')(x)
 model = keras.Model(inputs=inputs, outputs=outputs)
 
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-
+print(x_train.shape)
+print(y_train.shape)
 # Preprocess the data (these are Numpy arrays)
 x_train = x_train.reshape(60000, 784).astype('float32') / 255
 x_test = x_test.reshape(10000, 784).astype('float32') / 255
+print(x_train.shape)
+print(x_test.shape)
 
 y_train = y_train.astype('float32')
 y_test = y_test.astype('float32')
