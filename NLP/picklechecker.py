@@ -14,12 +14,4 @@ class picklechecker:
         var = pickle.load(pickle_in)
         pickle_in.close()
         return var
-    
-    def check_pickle(self):
-        check_state = True
-        try:
-            f = open(self.loc)
-        except IOError:
-            check_state = False
-        return check_state
 

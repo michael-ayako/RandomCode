@@ -29,28 +29,20 @@ class machine_learning:
         self.model.add(Dense(12, activation='softmax'))
         self.model.add(Dense(y, activation='softmax'))
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-        history = self.model.fit(self.X_train, self.y_train, 
-                        epochs=30, 
-                        batch_size=10,
-                        validation_data=(self.X_val, self.y_val))
-        print('\nhistory dict:', history.history)
-
-        # Evaluate the model on the test data using `evaluate`
-        print('\n# Evaluate on test data')
-        results = self.model.evaluate(self.X_test, self.y_test, batch_size=128)
-        print('test loss, test acc:', results)
-
-        # Generate predictions (probabilities -- the output of the last layer)
-        # on new data using `predict`
-        print('\n# Generate predictions for 3 samples')
-        predictions = self.model.predict(self.X_test[:6])
-        print('predictions shape:', predictions.shape)
         
+    
+    def model_train(self):
+        self.model.fit(self.X_train, self.y_train, 
+            epochs=30, 
+            batch_size=10,
+            validation_data=(self.X_val, self.y_val))
+        self.model.save("savepickles\model.h5")       
         
 
     def __main__(self):
         self.traintestsplit()
         self.model_defination()
+        self.model_train()
 
 
 

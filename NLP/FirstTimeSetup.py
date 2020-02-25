@@ -1,7 +1,9 @@
+from keras.models import load_model
 import pickle
 from data_cleaning import data_cleaning
 from training import machine_learning
 from picklechecker import picklechecker
+
 
 
 class main:
@@ -29,18 +31,19 @@ class main:
 
 def __main__():
     startExec = main()
-    checkpickles = ['X_cleaned','y_cleaned']
-    for x in checkpickles :
-        pc = picklechecker(x,"")
-        if(pc.check_pickle() == False):
-            startExec.cleanup_module()
-        else:
-            if(x == 'X_cleaned'):
-                startExec.X_cleaned = pc.load_pickle()
-            elif(x == 'y_cleaned'):
-                startExec.y_cleaned = pc.load_pickle()
-
-    startExec.chatbot_module()
+    try:
+        pc = picklechecker("X_cleaned","")
+        startExec.X_cleaned = pc.load_pickle()
+        pc = picklechecker("y_cleaned","")
+        startExec.y_cleaned = pc.load_pickle()
+    except:
+        startExec.cleanup_module()
+    
+    try:
+        model = load_model('savepickles\model.h5')
+    except Exception as e:
+        print(e)
+        startExec.chatbot_module()
     
 
 if __name__ == "__main__":
