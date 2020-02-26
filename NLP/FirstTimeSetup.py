@@ -18,27 +18,31 @@ class main:
         OUT_DIR = './outputfiles_debug'
         dc = self.data_cleaning(MAIN_DIR,OUT_DIR)
         self.X_cleaned,self.y_cleaned = dc.__main__()
-        pc = picklechecker("X_cleaned",self.X_cleaned)
-        pc.save_pickle()
-        pc = picklechecker("y_cleaned",self.y_cleaned)
-        pc.save_pickle()
+        with open("savepickles\X_cleaned", 'wb') as pickle_file:
+            pickle.dump(self.X_cleaned, pickle_file)
+        with open("savepickles\y_cleaned", 'wb') as pickle_file:
+            pickle.dump(self.y_cleaned, pickle_file)
           
 
-    def chatbot_module(self):
+    def training_module(self):
         ml = self.machine_learning(self.X_cleaned,self.y_cleaned)
         ml.__main__()
 
 
 def __main__():
     startExec = main()
+    #Loading pickels
     try:
-        pc = picklechecker("X_cleaned","")
-        startExec.X_cleaned = pc.load_pickle()
-        pc = picklechecker("y_cleaned","")
-        startExec.y_cleaned = pc.load_pickle()
+        pickle_in = open("savepickles\X_cleaned","rb")
+        startExec.X_cleaned  = pickle.load(pickle_in)
+        pickle_in.close()
+ 
+        pickle_in = open("savepickles\y_cleaned","rb")
+        startExec.y_cleaned  = pickle.load(pickle_in)
+        pickle_in.close()
     except:
         startExec.cleanup_module()
-    
+    #lading models
     try:
         model = load_model('savepickles\model.h5')
     except Exception as e:
